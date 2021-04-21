@@ -1,0 +1,33 @@
+From 43ec72a64a1e16888a87474df47f0b3c7208272f Mon Sep 17 00:00:00 2001
+From: Isabelle Sauve <isabelle.sauve@datadoghq.com>
+Date: Tue, 6 Apr 2021 02:41:37 -0400
+Subject: [PATCH] Compile as static library
+
+---
+ librepo/CMakeLists.txt   | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/librepo/CMakeLists.txt b/librepo/CMakeLists.txt
+index 4f00a5ec2..e8abfbfd5 100644
+--- a/librepo/CMakeLists.txt
++++ b/librepo/CMakeLists.txt
+@@ -45,7 +45,7 @@ SET(librepo_HEADERS
+     downloader_internal.h
+     downloadtarget.h)
+ 
+-ADD_LIBRARY(librepo SHARED ${librepo_SRCS})
++ADD_LIBRARY(librepo STATIC ${librepo_SRCS})
+ TARGET_LINK_LIBRARIES(librepo
+                         ${LIBXML2_LIBRARIES}
+                         ${CURL_LIBRARY}
+@@ -69,7 +69,7 @@ IF (CMAKE_SIZEOF_VOID_P MATCHES "8")
+ ENDIF (CMAKE_SIZEOF_VOID_P MATCHES "8")
+ 
+ INSTALL(FILES ${librepo_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/librepo)
+-INSTALL(TARGETS librepo LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
++INSTALL(TARGETS librepo ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ INSTALL(FILES "${CMAKE_BINARY_DIR}/librepo.pc"
+ 	DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+ 
+-- 
+2.31.1

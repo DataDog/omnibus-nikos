@@ -1,0 +1,24 @@
+From 31a8613ef6f7d688c49a8b5c45aded8f51698f77 Mon Sep 17 00:00:00 2001
+From: Isabelle Sauve <isabelle.sauve@datadoghq.com>
+Date: Wed, 28 Apr 2021 15:05:04 -0400
+Subject: [PATCH] Set CMAKE_POSITION_INDEPENDENT_CODE to ON
+
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b31d172..3dbb950 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,6 +12,7 @@ cmake_policy(SET CMP0005 OLD)
+ cmake_policy(SET CMP0003 NEW)
+ include(GNUInstallDirs)
+ 
++set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+ # use project specific cmake modules
+ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+-- 
+2.31.1
+

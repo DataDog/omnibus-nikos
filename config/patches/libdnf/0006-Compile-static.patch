@@ -1,0 +1,31 @@
+From cd25f5b5997da81058e1cd85dd14b6f783d52a91 Mon Sep 17 00:00:00 2001
+From: Isabelle Sauve <isabelle.sauve@datadoghq.com>
+Date: Mon, 5 Apr 2021 21:20:46 -0400
+Subject: [PATCH] Compile libdnf statically
+
+---
+ libdnf/CMakeLists.txt        | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libdnf/CMakeLists.txt b/libdnf/CMakeLists.txt
+index dcee38b1c..c2d50d906 100644
+--- a/libdnf/CMakeLists.txt
++++ b/libdnf/CMakeLists.txt
+@@ -54,7 +54,7 @@ set(LIBDNF_SRCS ${LIBDNF_SRCS} ${SACK_SOURCES})
+ set(LIBDNF_SRCS ${LIBDNF_SRCS} ${REPO_SOURCES})
+ set(LIBDNF_SRCS ${LIBDNF_SRCS} ${PLUGIN_SOURCES})
+
+-add_library(libdnf SHARED ${LIBDNF_SRCS})
++add_library(libdnf STATIC ${LIBDNF_SRCS})
+ target_link_libraries(libdnf
+     ${CMAKE_DL_LIBS}
+     ${REPO_LIBRARIES}
+@@ -134,5 +134,5 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libdnf.pc
+ )
+ install(FILES ${LIBDNF_headers} DESTINATION include/libdnf)
+ install(FILES ${LIBHAWKEY_headers} DESTINATION include/libdnf)
+-install(TARGETS libdnf LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
++install(TARGETS libdnf ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+ install(FILES "README.plugins" DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/libdnf/plugins" RENAME "README")
+--
+2.31.1

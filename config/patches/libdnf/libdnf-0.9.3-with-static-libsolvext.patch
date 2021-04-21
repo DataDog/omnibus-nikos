@@ -1,0 +1,93 @@
+From bff8c2a9cc77eb16799473180eebe4ceb6e0a78b Mon Sep 17 00:00:00 2001
+From: Neal Gompa <ngompa13@gmail.com>
+Date: Sun, 13 Aug 2017 12:35:11 -0400
+Subject: [PATCH] Ensure libsolvext dynamic library dependencies are linked
+
+libsolv, when built only build with static link libraries, does not
+make a fully usable configuration for static libsolvext to be used
+because the CMake and pkgconfig files do not declare the appropriate
+libraries to successfully link a static libsolvext that has dynamic library
+dependencies.
+
+This patch works around it by doing the declarations here rather than
+in libsolv, since it's not easy to fix there, given upstream constraints.
+---
+ CMakeLists.txt               | 11 +++++++++++
+ cmake/modules/FindLZMA.cmake | 25 +++++++++++++++++++++++++
+ libdnf/CMakeLists.txt        |  7 ++++++-
+ 3 files changed, 42 insertions(+), 1 deletion(-)
+ create mode 100644 cmake/modules/FindLZMA.cmake
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3b98e08..31fa7c2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,6 +39,17 @@ pkg_check_modules (CHECK REQUIRED check)
+ pkg_check_modules (REPO REQUIRED librepo)
+ FIND_PROGRAM (VALGRIND_PROGRAM NAMES valgrind PATH /usr/bin /usr/local/bin)
+ 
++# Ensure that static libsolvext dynamic library dependencies are linked in
++# libxml2 dependency
++find_package (LibXml2 REQUIRED)
++# zlib dependency
++find_package (ZLIB REQUIRED)
++# lzma dependency
++find_package (LZMA REQUIRED)
++# bzip2 dependency
++find_package (BZip2 REQUIRED)
++# End static libsolvext dynamic library dependencies
++
+ # TODO handle yumdb / dnfdb for libdnf
+ ADD_DEFINITIONS(-DBUILDOPT_USE_DNF_YUMDB=1)
+ 
+diff --git a/cmake/modules/FindLZMA.cmake b/cmake/modules/FindLZMA.cmake
+new file mode 100644
+index 0000000..eb112df
+--- /dev/null
++++ b/cmake/modules/FindLZMA.cmake
+@@ -0,0 +1,25 @@
++# - Find lzma
++# Find the native LZMA headers and library
++#
++#  LZMA_INCLUDE_DIR    - where to find lzma.h, etc.
++#  LZMA_LIBRARIES      - List of libraries when using liblzma.
++#  LZMA_FOUND          - True if liblzma found.
++
++IF (LZMA_INCLUDE_DIR)
++  # Already in cache, be silent
++  SET(LZMA_FIND_QUIETLY TRUE)
++ENDIF (LZMA_INCLUDE_DIR)
++
++FIND_PATH(LZMA_INCLUDE_DIR lzma.h)
++FIND_LIBRARY(LZMA_LIBRARY NAMES lzma liblzma)
++
++# handle the QUIETLY and REQUIRED arguments and set LZMA_FOUND to TRUE if 
++# all listed variables are TRUE
++INCLUDE(FindPackageHandleStandardArgs)
++FIND_PACKAGE_HANDLE_STANDARD_ARGS(LZMA DEFAULT_MSG LZMA_LIBRARY LZMA_INCLUDE_DIR)
++
++IF(LZMA_FOUND)
++  SET( LZMA_LIBRARIES ${LZMA_LIBRARY} )
++ELSE(LZMA_FOUND)
++  SET( LZMA_LIBRARIES )
++ENDIF(LZMA_FOUND)
+diff --git a/libdnf/CMakeLists.txt b/libdnf/CMakeLists.txt
+index 111585e..f3a1f93 100644
+--- a/libdnf/CMakeLists.txt
++++ b/libdnf/CMakeLists.txt
+@@ -43,7 +43,12 @@ TARGET_LINK_LIBRARIES(libdnf
+                       ${GLIB_GIO_UNIX_LIBRARIES}
+                       ${LIBSOLV_LIBRARY}
+                       ${LIBSOLV_EXT_LIBRARY}
+-                      ${RPMDB_LIBRARY})
++                      ${RPMDB_LIBRARY}
++                      ${LIBXML2_LIBRARIES}
++                      ${ZLIB_LIBRARY}
++                      ${LZMA_LIBRARY}
++                      ${BZIP2_LIBRARY}
++                      )
+ 
+ if (ENABLE_RHSM_SUPPORT)
+     target_link_libraries (libdnf ${RHSM_LIBRARIES})
+-- 
+2.12.0

@@ -1,0 +1,24 @@
+From 0c2db52fd074cb10077bd17ecf306200b1368cb8 Mon Sep 17 00:00:00 2001
+From: Isabelle Sauve <isabelle.sauve@datadoghq.com>
+Date: Tue, 27 Apr 2021 20:24:12 -0400
+Subject: [PATCH] Include atomic
+
+---
+ libdnf/dnf-context.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/libdnf/dnf-context.cpp b/libdnf/dnf-context.cpp
+index 6e232a8..210bbe3 100644
+--- a/libdnf/dnf-context.cpp
++++ b/libdnf/dnf-context.cpp
+@@ -40,6 +40,7 @@
+ #include <set>
+ #include <vector>
+ #include <unordered_set>
++#include <atomic>
+ #include <gio/gio.h>
+ #include <rpm/rpmlib.h>
+ #include <rpm/rpmmacro.h>
+-- 
+2.31.1
+

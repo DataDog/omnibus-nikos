@@ -1,0 +1,26 @@
+From 70e7a5b21b8de468c46ad81dbe8d6461c54d0f38 Mon Sep 17 00:00:00 2001
+From: Isabelle Sauve <isabelle.sauve@datadoghq.com>
+Date: Fri, 9 Apr 2021 12:51:19 -0400
+Subject: [PATCH] Disable build tests
+
+---
+ meson.build | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index aaba6c8e2..f1b7e857f 100644
+--- a/meson.build
++++ b/meson.build
+@@ -94,7 +94,8 @@ installed_tests_template = files('template.test.in')
+ installed_tests_template_tap = files('template-tap.test.in')
+ 
+ # Don’t build the tests unless we can run them (either natively, in an exe wrapper, or by installing them for later use)
+-build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper()) or installed_tests_enabled
++# build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper()) or installed_tests_enabled
++build_tests = false
+ 
+ add_project_arguments('-D_GNU_SOURCE', language: 'c')
+ 
+-- 
+2.31.1
+

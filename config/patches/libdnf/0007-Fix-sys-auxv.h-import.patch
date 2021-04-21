@@ -1,0 +1,25 @@
+From 26044a0d879ca0704a43d1906642adffcf03e03a Mon Sep 17 00:00:00 2001
+From: Isabelle Sauve <isabelle.sauve@datadoghq.com>
+Date: Tue, 27 Apr 2021 20:01:19 -0400
+Subject: [PATCH] Fix sys/auxv.h import
+
+---
+ libdnf/hy-util.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libdnf/hy-util.cpp b/libdnf/hy-util.cpp
+index 295fdc1..a331bb7 100644
+--- a/libdnf/hy-util.cpp
++++ b/libdnf/hy-util.cpp
+@@ -24,7 +24,7 @@
+ #include <ctype.h>
+ #include <sys/utsname.h>
+ #include <sys/stat.h>
+-#include <sys/auxv.h>
++#include "sys/auxv.h"
+ 
+ // hawkey
+ #include "dnf-types.h"
+-- 
+2.31.1
+
