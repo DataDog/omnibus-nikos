@@ -165,6 +165,8 @@ build do
     patch source: "openssl-1.0.1j-windows-relocate-dll.patch", env: env
   end
 
+  patch source: "0001-Remove-getentropy-weak-symbol-from-libcrypto.patch", env: patch_env
+
   make "depend", env: env
   # make -j N on openssl is not reliable
   make env: env

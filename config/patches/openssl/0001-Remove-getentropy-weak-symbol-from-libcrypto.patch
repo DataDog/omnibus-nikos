@@ -1,0 +1,54 @@
+From ae890d6619424631bb5d7e26986b3c40806ef5cc Mon Sep 17 00:00:00 2001
+From: Isabelle Sauve <isabelle.sauve@datadoghq.com>
+Date: Thu, 6 May 2021 23:05:12 -0400
+Subject: [PATCH] Remove getentropy weak symbol from libcrypto
+
+---
+ crypto/rand/rand_unix.c    | 24 -------------------
+ 1 file changed, 24 deletions(-)
+
+diff --git a/crypto/rand/rand_unix.c b/crypto/rand/rand_unix.c
+index ec6be79..b711995 100644
+--- a/crypto/rand/rand_unix.c
++++ b/crypto/rand/rand_unix.c
+@@ -356,29 +356,6 @@ static ssize_t syscall_random(void *buf, size_t buflen)
+      * between size_t and ssize_t is safe even without a range check.
+      */
+ 
+-    /*
+-     * Do runtime detection to find getentropy().
+-     *
+-     * Known OSs that should support this:
+-     * - Darwin since 16 (OSX 10.12, IOS 10.0).
+-     * - Solaris since 11.3
+-     * - OpenBSD since 5.6
+-     * - Linux since 3.17 with glibc 2.25
+-     * - FreeBSD since 12.0 (1200061)
+-     *
+-     * Note: Sometimes getentropy() can be provided but not implemented
+-     * internally. So we need to check errno for ENOSYS
+-     */
+-#  if defined(__GNUC__) && __GNUC__>=2 && defined(__ELF__) && !defined(__hpux)
+-    extern int getentropy(void *buffer, size_t length) __attribute__((weak));
+-
+-    if (getentropy != NULL) {
+-        if (getentropy(buf, buflen) == 0)
+-            return (ssize_t)buflen;
+-        if (errno != ENOSYS)
+-            return -1;
+-    }
+-#  else
+     union {
+         void *p;
+         int (*f)(void *buffer, size_t length);
+@@ -393,7 +370,6 @@ static ssize_t syscall_random(void *buf, size_t buflen)
+     ERR_pop_to_mark();
+     if (p_getentropy.p != NULL)
+         return p_getentropy.f(buf, buflen) == 0 ? (ssize_t)buflen : -1;
+-#  endif
+ 
+     /* Linux supports this since version 3.17 */
+ #  if defined(__linux) && defined(__NR_getrandom)
+-- 
+2.31.1
+
