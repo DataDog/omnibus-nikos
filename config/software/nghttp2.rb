@@ -13,7 +13,6 @@ relative_path "nghttp2-#{version}"
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)
-  env["PYTHON"] = "/usr/local/bin/python3.8"
   env["CFLAGS"] << " -fPIC"
 
   configure_options = [
