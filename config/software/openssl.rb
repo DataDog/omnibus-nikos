@@ -85,7 +85,6 @@ build do
 
   configure_args = [
     "--prefix=#{install_dir}/embedded",
-    "no-unit-test",
     "no-comp",
     "no-idea",
     "no-mdc2",
@@ -93,7 +92,10 @@ build do
     "no-ssl2",
     "no-ssl3",
     "no-zlib",
-    "no-shared"
+    "no-shared",
+    "no-tests",
+    "no-unit-test",
+    "no-external-tests"
   ]
 
   configure_args += ["--with-fipsdir=#{install_dir}/embedded", "fips"] if fips_mode?
