@@ -45,8 +45,13 @@ build do
 
   update_config_guess
 
+  # Build & use an internal copy of BDB database
+  command "wget http://download.oracle.com/berkeley-db/db-4.5.20.tar.gz"
+  command "tar xzf db-4.5.20.tar.gz"
+  command "ln -s db-4.5.20 db"
+  
   configure_options = [
-    "--enable-bdb=no",
+    "--enable-bdb",
     "--enable-sqlite=no",
     "--disable-nls",
     "--disable-openmp",
