@@ -28,6 +28,7 @@ dependency "libgpg-error"
 dependency "libgcrypt"
 dependency "popt"
 dependency "zstd"
+dependency "sqlite"
 
 version "4.16.0" do
   source url: "http://ftp.rpm.org/releases/rpm-4.16.x/rpm-4.16.0.tar.bz2",
@@ -44,15 +45,15 @@ build do
   patch source: "0001-Include-fcntl.patch", env: env
 
   update_config_guess
-
-  # Build & use an internal copy of BDB database
-  command "wget http://download.oracle.com/berkeley-db/db-4.5.20.tar.gz"
-  command "tar xzf db-4.5.20.tar.gz"
-  command "ln -s db-4.5.20 db"
   
+  env["SQLITE_CFLAGS"] ="-I/opt/nikos/embedded/include"
+  env["SQLITE_LIBS"] ="-L/opt/nikos/embedded/lib -lsqlite3"
+
   configure_options = [
-    "--enable-bdb",
-    "--enable-sqlite=no",
+    "--enable-sqlite=yes",
+    "--enable-ndb=no",
+    "--enable-bdb=no",
+    "--enable-bdb-ro=no",
     "--disable-nls",
     "--disable-openmp",
     "--disable-plugins",
