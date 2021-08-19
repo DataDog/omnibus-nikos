@@ -38,6 +38,9 @@ end
 relative_path "rpm-#{version}"
 
 build do
+  # patch source: "0001-Include-fcntl.patch"
+  patch source: "0002-Set-backend-db-to-sqlite-by-default-in-the-macros.patch"
+
   env = with_standard_compiler_flags(with_embedded_path)
 
   env["CFLAGS"] << " -fPIC"
@@ -51,9 +54,7 @@ build do
 
   configure_options = [
     "--enable-sqlite=yes",
-    "--enable-ndb=no",
     "--enable-bdb=no",
-    "--enable-bdb-ro=no",
     "--disable-nls",
     "--disable-openmp",
     "--disable-plugins",
@@ -66,7 +67,7 @@ build do
     "--without-audit",
     "--enable-static",
     "--disable-shared",
-    ]
+  ]
   configure(*configure_options, env: env)
 
   make "-j #{workers}", env: env
