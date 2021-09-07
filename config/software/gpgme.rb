@@ -46,9 +46,9 @@ build do
     "--disable-g13-test",
     "--enable-static",
     "--disable-shared",
-    "--enable-fixed-path=/opt/nikos/embedded/bin"
+    "--enable-fixed-path=#{install_dir}/embedded/bin"
   ]
-
+  
   configure(*configure_options, env: env)
 
   make "-j #{workers}", env: env

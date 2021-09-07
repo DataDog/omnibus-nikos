@@ -8,9 +8,13 @@ name "nikos"
 maintainer "Sylvain Baubeau <sylvain.baubeau@datadoghq.com>"
 homepage "https://github.com/DataDog/nikos"
 
-# Defaults to C:/nikos on Windows
-# and /opt/nikos on all other platforms
-install_dir "#{default_root}/#{name}"
+if not ENV['NIKOS_INSTALL_DIR'].empty?
+  install_dir ENV['NIKOS_INSTALL_DIR']
+else
+  # Defaults to C:/nikos on Windows
+  # and /opt/nikos on all other platforms
+  install_dir "#{default_root}/#{name}"
+end
 
 build_version Omnibus::BuildVersion.semver
 build_iteration 1

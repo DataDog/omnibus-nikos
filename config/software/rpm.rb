@@ -49,8 +49,8 @@ build do
 
   update_config_guess
   
-  env["SQLITE_CFLAGS"] ="-I/opt/nikos/embedded/include"
-  env["SQLITE_LIBS"] ="-L/opt/nikos/embedded/lib -lsqlite3"
+  env["SQLITE_CFLAGS"] ="-I#{install_dir}/embedded/include"
+  env["SQLITE_LIBS"] ="-L#{install_dir}/embedded/lib -lsqlite3"
 
   configure_options = [
     "--enable-sqlite=yes",
