@@ -15,7 +15,9 @@
 #
 
 name "readline"
-default_version "6.3"
+default_version "8.0"
+
+dependency 'ncurses'
 
 license "GPLv3+"
 license_file "COPYING"
@@ -33,10 +35,16 @@ build do
 
   configure_options = [
     "--prefix=#{install_dir}/embedded",
+    "--with-curses",
+    "--with-shared"
   ]
+
+  if arm?
+    configure_options << " --build=aarch64-unknown-linux-gnu"
+  end
 
   configure(*configure_options, env: env)
 
-  make "-j #{workers}", env: env
-  make "install", env: env
+  make 'SHLIB_LIBS="-L#{install_dir}/embedded/lib -lncursesw" -j #{workers}', env: env
+  make 'SHLIB_LIBS="-L#{install_dir}/embedded/lib -lncursesw" install', env: env
 end
