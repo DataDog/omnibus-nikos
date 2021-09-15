@@ -52,17 +52,19 @@ build do
 
   env = with_standard_compiler_flags(with_embedded_path)
 
-  # Use glibc 2.16
-  env["LD_LIBRARY_PATH"]= "/opt/glibc-2.16/lib" +
-                          ":/lib/x86_64-linux-gnu" +
-                          ":/usr/lib/x86_64-linux-gnu" +
-                          ":/usr/local/lib" +
-                          ":/lib" +
-                          ":/usr/lib" +
-                          ":/lib32" + 
-                          ":/usr/lib32" +
-                          ":" + env["LD_LIBRARY_PATH"]
-  command "ln -sfn /opt/glibc-2.16/lib/ld-2.16.so /lib64/ld-linux-x86-64.so.2"
+  if RUBY_PLATFORM == "x86_64-linux"
+    # Use glibc 2.16
+    env["LD_LIBRARY_PATH"]= "/opt/glibc-2.16/lib" +
+                            ":/lib/x86_64-linux-gnu" +
+                            ":/usr/lib/x86_64-linux-gnu" +
+                            ":/usr/local/lib" +
+                            ":/lib" +
+                            ":/usr/lib" +
+                            ":/lib32" + 
+                            ":/usr/lib32" +
+                            ":" + env["LD_LIBRARY_PATH"]
+    command "ln -sfn /opt/glibc-2.16/lib/ld-2.16.so /lib64/ld-linux-x86-64.so.2"
+  end
 
   cmake_options = [
     "-DCMAKE_C_FLAGS='-I#{install_dir}/embedded/libinclude -I/opt/glibc-2.16/include'",
@@ -78,6 +80,8 @@ build do
 
   cmake(*cmake_options, env: env)
 
-  # Reset the link we changed earlier
-  command "ln -sfn /lib/x86_64-linux-gnu/ld-2.13.so /lib64/ld-linux-x86-64.so.2"
+  if RUBY_PLATFORM == "x86_64-linux"
+    # Reset the link we changed earlier
+    command "ln -sfn /lib/x86_64-linux-gnu/ld-2.13.so /lib64/ld-linux-x86-64.so.2"
+  end
 end
