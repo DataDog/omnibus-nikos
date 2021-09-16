@@ -66,6 +66,10 @@ build do
     env["PATH"] = "/usr/gnu/bin:#{env["PATH"]}"
   end
 
+  if arm?
+    env["CFLAGS"] << " -fPIC"
+  end
+
   configure_options = [
     "--prefix=#{install_dir}/embedded",
     "--disable-option-checking",
